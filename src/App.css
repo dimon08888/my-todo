@@ -45,3 +45,7 @@ input:checked + span {
   gap: 10px;
 }
 
+.action-filter {
+  background: royalblue;
+  color: #fff;
+}

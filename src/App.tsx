@@ -8,11 +8,18 @@ type Todos = {
   edit: boolean
 }
 
+enum FilterButtons {
+  All = 'All',
+  Active = 'Active',
+  Completed = 'Completed',
+}
+
 function App() {
   const [todos, setTodos] = useState<Todos[]>([])
   const [filterTodos, setFilterTodos] = useState<Todos[]>([])
   const [text, setText] = useState('')
   const [changeTodo, setChangeTodo] = useState('')
+  const [active, setActive] = useState(FilterButtons.All)
 
   useEffect(() => {
     setFilterTodos(todos)
@@ -46,25 +53,27 @@ function App() {
   }
 
   function handleAllFilter() {
-    const newArr = [...todos]
-    setFilterTodos(newArr)
+    setFilterTodos(todos)
+    setActive(FilterButtons.All)
   }
 
   function handleActiveFilter() {
     const newArr = [...todos].filter(todo => !todo.completed)
     setFilterTodos(newArr)
+    setActive(FilterButtons.Active)
   }
 
   function handleCompletedFilter() {
     const newArr = [...todos].filter(todo => todo.completed)
     setFilterTodos(newArr)
+    setActive(FilterButtons.Completed)
   }
 
   function handleMarkAll() {
     setTodos(
       todos.map(todo => ({
         ...todo,
-        completed: !todo.completed,
+        completed: true,
       }))
     )
   }
@@ -112,9 +121,24 @@ function App() {
       </form>
 
       <div className='filters'>
-        <button onClick={() => handleAllFilter()}>All</button>
-        <button onClick={() => handleActiveFilter()}>Active</button>
-        <button onClick={() => handleCompletedFilter()}>Completed</button>
+        <button
+          className={active === 'All' ? 'action-filter' : ''}
+          onClick={() => handleAllFilter()}
+        >
+          All
+        </button>
+        <button
+          className={active === 'Active' ? 'action-filter' : ''}
+          onClick={() => handleActiveFilter()}
+        >
+          Active
+        </button>
+        <button
+          className={active === 'Completed' ? 'action-filter' : ''}
+          onClick={() => handleCompletedFilter()}
+        >
+          Completed
+        </button>
       </div>
 
       <div className='remaining-info'>

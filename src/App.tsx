@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { createSecureContext } from 'tls'
 import './App.css'
 
 type Todos = {
@@ -20,6 +21,8 @@ function App() {
   const [text, setText] = useState('')
   const [changeTodo, setChangeTodo] = useState('')
   const [active, setActive] = useState(FilterButtons.All)
+
+  const changeInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setFilterTodos(todos)
@@ -102,11 +105,16 @@ function App() {
           return {
             ...todo,
             text: changeTodo,
+            edit: false,
           }
         })
       )
     }
     setChangeTodo('')
+  }
+
+  function onChangeSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
   }
 
   return (
@@ -153,21 +161,22 @@ function App() {
               checked={todo.completed}
               onChange={() => ontoggleChecked(todo.id)}
             />
-            <span>{todo.text}</span>
+            {todo.edit ? (
+              <form onSubmit={e => onChangeSubmit(e)}>
+                <input
+                  ref={changeInputRef}
+                  type='text'
+                  onChange={e => setChangeTodo(e.target.value)}
+                />
+                <button onClick={() => onChangeTodo(todo.id)}>Change</button>
+              </form>
+            ) : (
+              <span>{todo.text}</span>
+            )}
             <button onClick={() => handleEditTodo(todo.id)}>Edit</button>
             <button className='delete' onClick={() => onDelete(todo.id)}>
               &times;
             </button>
-            {todo.edit && (
-              <div>
-                <input
-                  type='text'
-                  value={changeTodo}
-                  onChange={e => setChangeTodo(e.target.value)}
-                />
-                <button onClick={() => onChangeTodo(todo.id)}>Change</button>
-              </div>
-            )}
           </li>
         ))}
       </ul>

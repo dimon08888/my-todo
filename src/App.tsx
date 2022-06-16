@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { createSecureContext } from 'tls'
+
 import './App.css'
 
 type Todos = {
@@ -22,7 +22,7 @@ function App() {
   const [changeTodo, setChangeTodo] = useState('')
   const [active, setActive] = useState(FilterButtons.All)
 
-  const changeInputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setFilterTodos(todos)
@@ -88,7 +88,13 @@ function App() {
   function handleEditTodo(todoId: string) {
     setTodos(
       todos.map(todo => {
-        if (todo.id !== todoId) return todo
+        if (todo.id !== todoId) {
+          return {
+            ...todo,
+            edit: false,
+          }
+          // return todo
+        }
         return {
           ...todo,
           edit: !todo.edit,
@@ -155,7 +161,7 @@ function App() {
 
       <ul>
         {filterTodos.map(todo => (
-          <li key={todo.id}>
+          <li className='todo-li' key={todo.id}>
             <input
               type='checkbox'
               checked={todo.completed}
@@ -164,8 +170,10 @@ function App() {
             {todo.edit ? (
               <form onSubmit={e => onChangeSubmit(e)}>
                 <input
-                  ref={changeInputRef}
+                  ref={inputRef}
+                  defaultValue={todo.text}
                   type='text'
+                  autoFocus
                   onChange={e => setChangeTodo(e.target.value)}
                 />
                 <button onClick={() => onChangeTodo(todo.id)}>Change</button>
@@ -173,10 +181,10 @@ function App() {
             ) : (
               <span>{todo.text}</span>
             )}
-            <button onClick={() => handleEditTodo(todo.id)}>Edit</button>
-            <button className='delete' onClick={() => onDelete(todo.id)}>
-              &times;
+            <button onClick={() => handleEditTodo(todo.id)}>
+              {todo.edit ? 'Exit' : 'Edit'}
             </button>
+            <button onClick={() => onDelete(todo.id)}>Delete</button>
           </li>
         ))}
       </ul>

@@ -22,8 +22,6 @@ function App() {
   const [changeTodo, setChangeTodo] = useState('')
   const [active, setActive] = useState(FilterButtons.All)
 
-  const inputRef = useRef<HTMLInputElement>(null)
-
   useEffect(() => {
     setFilterTodos(todos)
   }, [todos])
@@ -129,26 +127,32 @@ function App() {
 
       <form onSubmit={onSubmit}>
         <label>
-          <input type='text' onChange={e => setText(e.target.value)} value={text} />
+          <input
+            className='todo-input'
+            type='text'
+            placeholder='Enter your todo here'
+            onChange={e => setText(e.target.value)}
+            value={text}
+          />
         </label>
-        <button>Add #{todos.length + 1}</button>
+        <button className='todo-button'>Add № {todos.length + 1}</button>
       </form>
 
       <div className='filters'>
         <button
-          className={active === 'All' ? 'action-filter' : ''}
+          className={active === 'All' ? 'action-filter' : 'not-action-filter'}
           onClick={() => handleAllFilter()}
         >
           All
         </button>
         <button
-          className={active === 'Active' ? 'action-filter' : ''}
+          className={active === 'Active' ? 'action-filter' : 'not-action-filter'}
           onClick={() => handleActiveFilter()}
         >
           Active
         </button>
         <button
-          className={active === 'Completed' ? 'action-filter' : ''}
+          className={active === 'Completed' ? 'action-filter' : 'not-action-filter'}
           onClick={() => handleCompletedFilter()}
         >
           Completed
@@ -163,6 +167,7 @@ function App() {
         {filterTodos.map(todo => (
           <li className='todo-li' key={todo.id}>
             <input
+              className='checkbox'
               type='checkbox'
               checked={todo.completed}
               onChange={() => ontoggleChecked(todo.id)}
@@ -170,28 +175,39 @@ function App() {
             {todo.edit ? (
               <form onSubmit={e => onChangeSubmit(e)}>
                 <input
-                  ref={inputRef}
+                  className='todo-input-edit'
                   defaultValue={todo.text}
                   type='text'
                   autoFocus
                   onChange={e => setChangeTodo(e.target.value)}
                 />
-                <button onClick={() => onChangeTodo(todo.id)}>Change</button>
+                <button
+                  className='todo-button-change'
+                  onClick={() => onChangeTodo(todo.id)}
+                >
+                  Change
+                </button>
               </form>
             ) : (
-              <span>{todo.text}</span>
+              <span className='todo-list'>{todo.text}</span>
             )}
-            <button onClick={() => handleEditTodo(todo.id)}>
+            <button className='todo-button-edit' onClick={() => handleEditTodo(todo.id)}>
               {todo.edit ? 'Exit' : 'Edit'}
             </button>
-            <button onClick={() => onDelete(todo.id)}>Delete</button>
+            <button className='todo-button-delete' onClick={() => onDelete(todo.id)}>
+              Delete
+            </button>
           </li>
         ))}
       </ul>
       <h2>Actions</h2>
       <div className='footer-filter'>
-        <button onClick={handleMarkAll}>Mark All Completed</button>
-        <button onClick={handleClearCompleted}>Clear Completed</button>
+        <button className='footer-action-button' onClick={handleMarkAll}>
+          Mark All Completed
+        </button>
+        <button className='footer-action-button' onClick={handleClearCompleted}>
+          Clear Completed
+        </button>
       </div>
     </div>
   )

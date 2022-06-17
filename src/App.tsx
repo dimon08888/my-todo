@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import './App.css'
 
@@ -21,9 +21,19 @@ function App() {
   const [text, setText] = useState('')
   const [changeTodo, setChangeTodo] = useState('')
   const [active, setActive] = useState(FilterButtons.All)
+  const [totalActive, setTotalActive] = useState<Todos[]>([])
+  const [totalCompleted, setTotalCompleted] = useState<Todos[]>([])
 
   useEffect(() => {
     setFilterTodos(todos)
+  }, [todos])
+
+  useEffect(() => {
+    setTotalActive(todos.filter(todo => !todo.completed))
+  }, [todos])
+
+  useEffect(() => {
+    setTotalCompleted(todos.filter(todo => todo.completed))
   }, [todos])
 
   function onSubmit(e: React.FormEvent) {
@@ -59,14 +69,12 @@ function App() {
   }
 
   function handleActiveFilter() {
-    const newArr = [...todos].filter(todo => !todo.completed)
-    setFilterTodos(newArr)
+    setFilterTodos(todos.filter(todo => !todo.completed))
     setActive(FilterButtons.Active)
   }
 
   function handleCompletedFilter() {
-    const newArr = [...todos].filter(todo => todo.completed)
-    setFilterTodos(newArr)
+    setFilterTodos(todos.filter(todo => todo.completed))
     setActive(FilterButtons.Completed)
   }
 
@@ -200,6 +208,11 @@ function App() {
           </li>
         ))}
       </ul>
+      <div className='total'>
+        <span>Total: {todos.length},</span>
+        <span>Active: {totalActive.length},</span>
+        <span>Completed: {totalCompleted.length}.</span>
+      </div>
       <h2>Actions</h2>
       <div className='footer-filter'>
         <button className='footer-action-button' onClick={handleMarkAll}>

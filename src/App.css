@@ -228,4 +228,12 @@ input:checked + span {
   cursor: pointer;
 }
 
+.total {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  margin-top: 20px;
+}
+
 

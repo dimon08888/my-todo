@@ -7,6 +7,8 @@ type Todos = {
   text: string
   completed: boolean
   edit: boolean
+  isChange: boolean
+  changeTime: string
 }
 
 enum FilterButtons {
@@ -23,6 +25,7 @@ function App() {
   const [active, setActive] = useState(FilterButtons.All)
   const [totalActive, setTotalActive] = useState<Todos[]>([])
   const [totalCompleted, setTotalCompleted] = useState<Todos[]>([])
+  const [time, setTime] = useState('')
 
   useEffect(() => {
     setFilterTodos(todos)
@@ -41,7 +44,14 @@ function App() {
     if (text.trim().length) {
       setTodos([
         ...todos,
-        { id: new Date().toISOString(), text, completed: false, edit: false },
+        {
+          id: new Date().toISOString(),
+          text,
+          completed: false,
+          edit: false,
+          isChange: false,
+          changeTime: '',
+        },
       ])
       setText('')
     }
@@ -109,15 +119,25 @@ function App() {
     )
   }
 
+  function getTime() {
+    const date = new Date()
+    return date.toLocaleString()
+  }
+
   function onChangeTodo(todoId: string) {
+    setTime(getTime)
     if (changeTodo.length) {
       setTodos(
         todos.map(todo => {
-          if (todo.id !== todoId) return todo
+          if (todo.id !== todoId) {
+            return todo
+          }
           return {
             ...todo,
             text: changeTodo,
             edit: false,
+            isChange: true,
+            changeTime: getTime(),
           }
         })
       )
@@ -174,37 +194,49 @@ function App() {
       <ul>
         {filterTodos.map(todo => (
           <li className='todo-li' key={todo.id}>
-            <input
-              className='checkbox'
-              type='checkbox'
-              checked={todo.completed}
-              onChange={() => ontoggleChecked(todo.id)}
-            />
-            {todo.edit ? (
-              <form onSubmit={e => onChangeSubmit(e)}>
+            <div className='todo-container'>
+              <div className='todo-wrapper'>
                 <input
-                  className='todo-input-edit'
-                  defaultValue={todo.text}
-                  type='text'
-                  autoFocus
-                  onChange={e => setChangeTodo(e.target.value)}
+                  className='checkbox'
+                  type='checkbox'
+                  checked={todo.completed}
+                  onChange={() => ontoggleChecked(todo.id)}
                 />
+                {todo.edit ? (
+                  <form onSubmit={e => onChangeSubmit(e)}>
+                    <input
+                      className='todo-input-edit'
+                      defaultValue={todo.text}
+                      type='text'
+                      autoFocus
+                      onChange={e => setChangeTodo(e.target.value)}
+                    />
+                    <button
+                      className='todo-button-change'
+                      onClick={() => onChangeTodo(todo.id)}
+                    >
+                      Change
+                    </button>
+                  </form>
+                ) : (
+                  <span className='todo-list'>{todo.text}</span>
+                )}
                 <button
-                  className='todo-button-change'
-                  onClick={() => onChangeTodo(todo.id)}
+                  className='todo-button-edit'
+                  onClick={() => handleEditTodo(todo.id)}
                 >
-                  Change
+                  {todo.edit ? 'Exit' : 'Edit'}
                 </button>
-              </form>
-            ) : (
-              <span className='todo-list'>{todo.text}</span>
-            )}
-            <button className='todo-button-edit' onClick={() => handleEditTodo(todo.id)}>
-              {todo.edit ? 'Exit' : 'Edit'}
-            </button>
-            <button className='todo-button-delete' onClick={() => onDelete(todo.id)}>
-              Delete
-            </button>
+                <button className='todo-button-delete' onClick={() => onDelete(todo.id)}>
+                  Delete
+                </button>
+              </div>
+              <div>
+                {todo.isChange && (
+                  <small className='time'>Change was: {todo.changeTime}</small>
+                )}
+              </div>
+            </div>
           </li>
         ))}
       </ul>

@@ -1,5 +1,5 @@
 * {
-box-sizing: border-box;
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Dancing Script', cursive;
@@ -37,7 +37,7 @@ button {
   text-align: center;
   margin: 50px auto;
   border-radius: 10px;
-  padding-bottom: 32px;
+  padding: 0px 15px 32px 15px;
 }
 
 .todo-input {
@@ -217,6 +217,7 @@ input:checked + span {
   border: 2px solid #5d0cff;
   border-radius: 4px;
   padding: 3px 7px;
+  word-break: break-all;
 
 }
 
@@ -234,6 +235,25 @@ input:checked + span {
   gap: 10px;
   color: #fff;
   margin-top: 20px;
+}
+
+.time {
+  color: #fff;
+}
+
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+}
+
+.todo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 

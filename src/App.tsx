@@ -9,6 +9,7 @@ type Todos = {
   edit: boolean
   isChange: boolean
   changeTime: string
+  createdDate: string
 }
 
 enum FilterButtons {
@@ -25,7 +26,6 @@ function App() {
   const [active, setActive] = useState(FilterButtons.All)
   const [totalActive, setTotalActive] = useState<Todos[]>([])
   const [totalCompleted, setTotalCompleted] = useState<Todos[]>([])
-  const [time, setTime] = useState('')
 
   useEffect(() => {
     setFilterTodos(todos)
@@ -39,6 +39,11 @@ function App() {
     setTotalCompleted(todos.filter(todo => todo.completed))
   }, [todos])
 
+  function getTime() {
+    const date = new Date()
+    return date.toLocaleString()
+  }
+
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (text.trim().length) {
@@ -51,6 +56,7 @@ function App() {
           edit: false,
           isChange: false,
           changeTime: '',
+          createdDate: getTime(),
         },
       ])
       setText('')
@@ -119,13 +125,7 @@ function App() {
     )
   }
 
-  function getTime() {
-    const date = new Date()
-    return date.toLocaleString()
-  }
-
   function onChangeTodo(todoId: string) {
-    setTime(getTime)
     if (changeTodo.length) {
       setTodos(
         todos.map(todo => {
@@ -232,8 +232,12 @@ function App() {
                 </button>
               </div>
               <div>
-                {todo.isChange && (
-                  <small className='time'>Change was: {todo.changeTime}</small>
+                {todo.isChange ? (
+                  <small className='time'>
+                    Created: {todo.createdDate}, Last Edit: {todo.changeTime}
+                  </small>
+                ) : (
+                  <small className='time'>Created: {todo.createdDate}</small>
                 )}
               </div>
             </div>

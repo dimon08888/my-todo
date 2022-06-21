@@ -38,6 +38,7 @@ button {
   margin: 50px auto;
   border-radius: 10px;
   padding: 0px 15px 32px 15px;
+  box-shadow: 2px 2px 3px #161a2b;
 }
 
 .todo-input {
@@ -91,7 +92,7 @@ button {
     rgba(20, 159, 255, 1) 0%,
     rgba(17, 122, 255, 1) 100%
   );
-  padding: 7px 12px;
+  padding: 6px 6px;
 }
 
 .todo-button-edit:hover {
@@ -109,7 +110,7 @@ button {
     rgb(226, 195, 19) 0%,
     rgb(232, 77, 10) 100%
   );
-  padding: 7px 12px;
+  padding: 6px 6px;
 }
 
 .todo-button-delete:hover {
@@ -126,7 +127,7 @@ button {
   rgb(183, 235, 40) 0%,
   rgba(17,122,255,1) 100%
   );
-  padding: 7px 12px;
+  padding: 6px 6px;
 }
 
 .todo-button-change:hover {
@@ -150,6 +151,7 @@ li {
 input:checked + span {
   text-decoration: line-through;
   opacity: 0.4;
+
 }
 
 .filters {
@@ -255,5 +257,31 @@ input:checked + span {
   align-items: center;
   gap: 5px;
 }
+
+select {
+  cursor: pointer;
+  padding: 5px 2px;
+  border-radius: 4px;
+  background: inherit;
+}
+
+.filter-color {
+  display: flex;
+  justify-content: center;
+  color: #fff;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.filter-color-input {
+  margin-left: 10px;
+}
+
+
 
 

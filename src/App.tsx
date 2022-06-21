@@ -10,6 +10,7 @@ type Todos = {
   isChange: boolean
   changeTime: string
   createdDate: string
+  color: string
 }
 
 enum FilterButtons {
@@ -26,6 +27,9 @@ function App() {
   const [active, setActive] = useState(FilterButtons.All)
   const [totalActive, setTotalActive] = useState<Todos[]>([])
   const [totalCompleted, setTotalCompleted] = useState<Todos[]>([])
+  const [filterByColor, setFilterByColor] = useState<Todos[]>([])
+
+  const colors = ['red', 'green', 'blue', 'yellow']
 
   useEffect(() => {
     setFilterTodos(todos)
@@ -57,6 +61,7 @@ function App() {
           isChange: false,
           changeTime: '',
           createdDate: getTime(),
+          color: '',
         },
       ])
       setText('')
@@ -149,6 +154,26 @@ function App() {
     e.preventDefault()
   }
 
+  function handleChangeColor(e: React.ChangeEvent<HTMLSelectElement>, id: string) {
+    setTodos(
+      todos.map(todo => {
+        if (todo.id !== id) return todo
+        return {
+          ...todo,
+          color: e.target.value,
+        }
+      })
+    )
+  }
+
+  function onFilterByColor(e: React.ChangeEvent<HTMLInputElement>, color: string) {
+    if (e.target.checked) {
+      setFilterTodos(filterTodos.filter(todo => todo.color === color))
+    } else {
+      setFilterTodos(todos)
+    }
+  }
+
   return (
     <div className='App'>
       <h1>What needs to be done?</h1>
@@ -221,7 +246,18 @@ function App() {
                 ) : (
                   <span className='todo-list'>{todo.text}</span>
                 )}
+                <select
+                  style={{ color: todo.color }}
+                  onChange={e => handleChangeColor(e, todo.id)}
+                >
+                  {colors.map((color, i) => (
+                    <option key={i} style={{ color: color }}>
+                      {color}
+                    </option>
+                  ))}
+                </select>
                 <button
+                  disabled={todo.completed}
                   className='todo-button-edit'
                   onClick={() => handleEditTodo(todo.id)}
                 >
@@ -257,6 +293,22 @@ function App() {
         <button className='footer-action-button' onClick={handleClearCompleted}>
           Clear Completed
         </button>
+      </div>
+      <h2>Filter By Color</h2>
+      <div className='filter-color'>
+        {colors.map((color, i) => (
+          <label className='filter-label' key={i}>
+            <input
+              className='filter-color-input'
+              type='checkbox'
+              onChange={e => onFilterByColor(e, color)}
+            />
+            <div
+              style={{ background: color, width: 15, height: 10, marginLeft: 3 }}
+            ></div>
+            {color}
+          </label>
+        ))}
       </div>
     </div>
   )

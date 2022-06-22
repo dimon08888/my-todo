@@ -27,13 +27,15 @@ function App() {
   const [active, setActive] = useState(FilterButtons.All)
   const [totalActive, setTotalActive] = useState<Todos[]>([])
   const [totalCompleted, setTotalCompleted] = useState<Todos[]>([])
-  const [filterByColor, setFilterByColor] = useState<Todos[]>([])
+  const [search, setSearch] = useState('')
 
   const colors = ['red', 'green', 'blue', 'yellow']
 
   useEffect(() => {
-    setFilterTodos(todos)
-  }, [todos])
+    setFilterTodos(
+      todos.filter(todo => todo.text.toLowerCase().includes(search.toLowerCase()))
+    )
+  }, [todos, search])
 
   useEffect(() => {
     setTotalActive(todos.filter(todo => !todo.completed))
@@ -190,6 +192,15 @@ function App() {
         </label>
         <button className='todo-button'>Add № {todos.length + 1}</button>
       </form>
+
+      <div>
+        <input
+          className='search'
+          type='text'
+          placeholder='Search...'
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
 
       <div className='filters'>
         <button

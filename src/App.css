@@ -54,6 +54,21 @@ button {
   color: #e2e2e2;
 }
 
+.search {
+  border-radius: 4px;
+  width: 220px;
+  margin-top: 10px;
+  background: transparent;
+  border: 2px solid #5d0cff;
+  color: #fff;
+  padding-left: 5px;
+}
+
+.search::placeholder {
+  color: #e2e2e2;
+}
+
+
 .todo-button {
   padding: 16px;
   border: none;

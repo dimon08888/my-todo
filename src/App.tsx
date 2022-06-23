@@ -19,7 +19,7 @@ enum FilterButtons {
   Completed = 'Completed',
 }
 
-function App() {
+export function App() {
   const [todos, setTodos] = useState<Todos[]>([])
   const [filterTodos, setFilterTodos] = useState<Todos[]>([])
   const [text, setText] = useState('')
@@ -28,6 +28,7 @@ function App() {
   const [totalActive, setTotalActive] = useState<Todos[]>([])
   const [totalCompleted, setTotalCompleted] = useState<Todos[]>([])
   const [search, setSearch] = useState('')
+  const [filterByColor, setFilterByColor] = useState<string[]>([])
 
   const colors = ['red', 'green', 'blue', 'yellow']
 
@@ -63,7 +64,7 @@ function App() {
           isChange: false,
           changeTime: '',
           createdDate: getTime(),
-          color: '',
+          color: colors[0],
         },
       ])
       setText('')
@@ -170,26 +171,28 @@ function App() {
 
   function onFilterByColor(e: React.ChangeEvent<HTMLInputElement>, color: string) {
     if (e.target.checked) {
-      setFilterTodos(filterTodos.filter(todo => todo.color === color))
+      setFilterByColor(filterByColor.concat(color))
     } else {
-      setFilterTodos(todos)
+      setFilterByColor(filterByColor.filter(c => c !== color))
     }
   }
 
   return (
     <div className='App'>
-      <h1>What needs to be done?</h1>
+      <label htmlFor='new-todo-input'>
+        <h1> What needs to be done? </h1>
+      </label>
 
       <form onSubmit={onSubmit}>
-        <label>
-          <input
-            className='todo-input'
-            type='text'
-            placeholder='Enter your todo here'
-            onChange={e => setText(e.target.value)}
-            value={text}
-          />
-        </label>
+        <input
+          id='new-todo-input'
+          className='todo-input'
+          type='text'
+          placeholder='Enter your todo here'
+          onChange={e => setText(e.target.value)}
+          value={text}
+        />
+
         <button className='todo-button'>Add № {todos.length + 1}</button>
       </form>
 
@@ -296,6 +299,7 @@ function App() {
         <span>Active: {totalActive.length},</span>
         <span>Completed: {totalCompleted.length}.</span>
       </div>
+
       <h2>Actions</h2>
       <div className='footer-filter'>
         <button className='footer-action-button' onClick={handleMarkAll}>
@@ -305,6 +309,7 @@ function App() {
           Clear Completed
         </button>
       </div>
+
       <h2>Filter By Color</h2>
       <div className='filter-color'>
         {colors.map((color, i) => (
